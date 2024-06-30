@@ -1,13 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { Separator } from 'tamagui';
 
-import { ScreenContent } from '~/components/ScreenContent';
+import PoppinsSemiBold from '~/components/Text/PoppinsSemibold';
 
 export default function Modal() {
   return (
     <>
-      <ScreenContent path="app/modal.tsx" title="Modal" />
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      <StatusBar style="light" />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'hsl(0, 0%, 6%)',
+          paddingHorizontal: 10,
+        }}>
+        <Pressable>
+          <PoppinsSemiBold style={{ color: 'white', fontSize: 20, padding: 10 }}>
+            Change Nickname
+          </PoppinsSemiBold>
+        </Pressable>
+        <Separator marginVertical={5} />
+        <Pressable>
+          <PoppinsSemiBold style={{ color: 'white', fontSize: 20, padding: 10 }}>
+            Change UTC
+          </PoppinsSemiBold>
+        </Pressable>
+      </View>
     </>
   );
 }
