@@ -11,7 +11,6 @@ import { TamaguiProvider } from 'tamagui';
 import config from '../tamagui.config';
 
 import { HeaderBack } from '~/components/ui/HeaderBack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
