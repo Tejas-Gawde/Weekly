@@ -1,92 +1,132 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Input } from 'tamagui';
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { View, StyleSheet, Pressable } from "react-native";
+import { Input } from "tamagui";
 
-import PoppinsRegular from './Text/PoppinsRegular';
+import PoppinsRegular from "./Text/PoppinsRegular";
 
 interface TimePickerProps {
-  setSelectedTime: Dispatch<SetStateAction<{ hours: number; minutes: number; amPm: string }>>;
-  selectedTime: { hours: number; minutes: number; amPm: string };
+  setSelectedTime: Dispatch<SetStateAction<{ hours: string; minutes: string; amPm: string }>>;
+  selectedTime: { hours: string; minutes: string; amPm: string };
+  error: string;
+  setError: Dispatch<SetStateAction<string>>;
 }
 
-const TimePicker: React.FC<TimePickerProps> = ({ setSelectedTime, selectedTime }) => {
-  const [error, setError] = useState('');
+const TimePicker: React.FC<TimePickerProps> = ({
+  setSelectedTime,
+  selectedTime,
+  error,
+  setError,
+}) => {
+  const [hourInput, setHourInput] = useState("");
+  const [minuteInput, setMinuteInput] = useState("");
+
+  useEffect(() => {
+    validateTime();
+  }, [selectedTime]);
+
+  useEffect(() => {
+    setHourInput(selectedTime.hours.toString());
+    setMinuteInput(selectedTime.minutes.toString());
+  }, [selectedTime.hours, selectedTime.minutes]);
+
+  const validateTime = () => {
+    const now = new Date();
+    const currentHours = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    let selectedHours = parseInt(selectedTime.hours, 10);
+    if (selectedTime.amPm === "PM" && selectedHours !== 12) {
+      selectedHours += 12;
+    } else if (selectedTime.amPm === "AM" && selectedHours === 12) {
+      selectedHours = 0;
+    }
+
+    const selectedMinutes = parseInt(selectedTime.minutes, 10);
+
+    if (
+      selectedHours < currentHours ||
+      (selectedHours === currentHours && selectedMinutes < currentMinutes)
+    ) {
+      setError("Selected time cannot be earlier than the current time");
+    } else {
+      setError("");
+    }
+  };
 
   const handleAmPmChange = () => {
-    if (selectedTime.amPm === 'AM') {
-      setSelectedTime((prevSelectedTime) => ({
-        ...prevSelectedTime,
-        amPm: 'PM',
-      }));
-    } else {
-      setSelectedTime((prevSelectedTime) => ({
-        ...prevSelectedTime,
-        amPm: 'AM',
-      }));
-    }
+    setSelectedTime((prevSelectedTime) => ({
+      ...prevSelectedTime,
+      amPm: prevSelectedTime.amPm === "AM" ? "PM" : "AM",
+    }));
   };
 
   const handleHourChange = (text: string) => {
     const hour = text ? parseInt(text, 10) : NaN;
+    setHourInput(text);
     if (isNaN(hour)) {
-      setError('');
-    } else if (hour < 1 || hour > 12) {
-      setError('Hour must be between 1 and 12');
-    } else {
-      setError('');
+      setError("");
       setSelectedTime((prevSelectedTime) => ({
         ...prevSelectedTime,
-        hours: hour,
-        amPm: selectedTime.amPm,
+        hours: "",
+      }));
+    } else if (hour < 1 || hour > 12) {
+      setError("Hour must be between 1 and 12");
+    } else {
+      setSelectedTime((prevSelectedTime) => ({
+        ...prevSelectedTime,
+        hours: hour.toString(),
       }));
     }
   };
 
-  const handMinuteChange = (text: string) => {
+  const handleMinuteChange = (text: string) => {
     const minute = text ? parseInt(text, 10) : NaN;
+    setMinuteInput(text);
     if (isNaN(minute)) {
-      setError('');
-    } else if (minute < 0 || minute > 59) {
-      setError('Minute must be between 00 and 59');
-    } else {
-      setError('');
+      setError("");
       setSelectedTime((prevSelectedTime) => ({
         ...prevSelectedTime,
-        minutes: minute,
-        amPm: selectedTime.amPm,
+        minutes: "",
+      }));
+    } else if (minute < 0 || minute > 59) {
+      setError("Minute must be between 00 and 59");
+    } else {
+      setSelectedTime((prevSelectedTime) => ({
+        ...prevSelectedTime,
+        minutes: minute.toString(),
       }));
     }
   };
 
   return (
     <View style={styles.container}>
-      <PoppinsRegular style={styles.text}>Time</PoppinsRegular>
       <View style={styles.timePicker}>
         <Input
-          defaultValue="12"
+          value={hourInput}
           maxLength={2}
           keyboardType="numeric"
           flex={1}
           size={1}
-          borderWidth={1}
-          borderColor="gray"
+          borderWidth={0}
           placeholder="12"
           onChangeText={handleHourChange}
         />
         <Input
-          defaultValue="00"
+          value={minuteInput}
           maxLength={2}
           keyboardType="numeric"
           flex={1}
           size={1}
-          borderWidth={1}
-          borderColor="gray"
+          borderWidth={0}
           placeholder="00"
-          onChangeText={handMinuteChange}
+          onChangeText={handleMinuteChange}
         />
-        <Button width={62} onPress={handleAmPmChange}>
-          {selectedTime.amPm}
-        </Button>
+        <Pressable
+          android_ripple={{ color: "gray", borderless: false, foreground: true }}
+          style={styles.button}
+          onPress={handleAmPmChange}>
+          <PoppinsRegular style={styles.buttonText}>{selectedTime.amPm}</PoppinsRegular>
+        </Pressable>
       </View>
       {error ? <PoppinsRegular style={styles.error}>{error}</PoppinsRegular> : null}
     </View>
@@ -95,22 +135,31 @@ const TimePicker: React.FC<TimePickerProps> = ({ setSelectedTime, selectedTime }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 20,
-    color: 'white',
+    alignItems: "center",
     paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   timePicker: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
-    width: '90%',
   },
   error: {
-    color: 'red',
+    color: "red",
     marginTop: 10,
+  },
+  button: {
+    overflow: "hidden",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    elevation: 2,
+    color: "black",
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    textAlign: "center",
+    width: 25,
   },
 });
 

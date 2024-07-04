@@ -1,55 +1,117 @@
-import { FlashList } from '@shopify/flash-list';
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Q } from "@nozbe/watermelondb";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { FlashList } from "@shopify/flash-list";
+import { format } from "date-fns";
+import React, { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, Animated, Pressable } from "react-native";
 
-import PoppinsRegular from './Text/PoppinsRegular';
-import PoppinsSemiBold from './Text/PoppinsSemibold';
+import PoppinsRegular from "./Text/PoppinsRegular";
+import PoppinsSemiBold from "./Text/PoppinsSemibold";
 
-interface Task {
-  time: string;
-  title: string;
-  tags: string[];
-  duration: string;
-  color: string;
-}
+import database, { statisticsCollection, taskCollection } from "~/database";
+import Task from "~/models/Tasks";
 
 interface TaskCardProps {
   task: Task;
-  isLast: boolean;
   index: number;
+  onRemove: (id: string) => void;
 }
 
 interface TaskTimelineProps {
-  tasks: Task[] | [];
+  tasks: Task[];
+  selectedDay: string;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, isLast, index }) => {
-  const colors = ['hsl(0, 0%, 100%)', 'hsl(269, 100%, 84%)', 'hsl(54, 100%, 76%)'];
+const TaskCard: React.FC<TaskCardProps> = ({ task, index, onRemove }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const colors = ["hsl(54, 100%, 76%)", "hsl(269, 100%, 84%)", "hsl(0, 0%, 100%)"];
   const color = colors[index % colors.length];
+  const formattedDate = format(new Date(task.iso), "MMM, dd hh:mm a");
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
+  const fadeOut = (callback: () => void) => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      callback();
+    });
+  };
+
+  async function handleComplete(taskid: string) {
+    fadeOut(() => {
+      database.write(async () => {
+        const taskToDelete = await taskCollection.query(Q.where("id", taskid)).fetch();
+        await taskToDelete[0].markAsDeleted();
+        await taskToDelete[0].destroyPermanently();
+        const statistics = await statisticsCollection.query().fetch();
+        const stat = statistics[0];
+        await stat.update((s) => {
+          s.tasksCompleted += 1;
+        });
+        onRemove(taskid);
+      });
+    });
+  }
+
+  async function handleDelete(taskid: string) {
+    fadeOut(() => {
+      database.write(async () => {
+        const taskToDelete = await taskCollection.query(Q.where("id", taskid)).fetch();
+        await taskToDelete[0].markAsDeleted();
+        await taskToDelete[0].destroyPermanently();
+        onRemove(taskid);
+      });
+    });
+  }
 
   return (
-    <View style={styles.taskContainer}>
-      <View style={styles.timelineContainer}>
-        <View style={styles.timelineDot} />
-        {!isLast && <View style={styles.timelineLine} />}
-      </View>
+    <Animated.View style={[styles.taskContainer, { opacity: fadeAnim }]}>
       <View style={[styles.taskCard, { backgroundColor: color }]}>
-        <PoppinsRegular style={styles.taskTime}>{task.time}</PoppinsRegular>
-        <PoppinsSemiBold style={styles.taskTitle}>{task.title}</PoppinsSemiBold>
-        <View style={styles.tagsContainer}>
-          {task.tags.map((tag, index) => (
-            <PoppinsRegular key={index} style={styles.tag}>
-              #{tag}
-            </PoppinsRegular>
-          ))}
+        <View style={styles.taskInfo}>
+          <PoppinsRegular style={styles.taskTime}>{formattedDate}</PoppinsRegular>
+          <PoppinsSemiBold style={styles.taskTitle}>{task.title}</PoppinsSemiBold>
+          <PoppinsRegular style={styles.taskDesc}>{task.description}</PoppinsRegular>
+          <PoppinsSemiBold style={styles.taskPriority}>{task.priority}</PoppinsSemiBold>
         </View>
-        <PoppinsRegular style={styles.taskDuration}>{task.duration}</PoppinsRegular>
+        <View style={styles.taskCardButtons}>
+          <Pressable
+            android_ripple={{ color: "gray", borderless: false, foreground: true }}
+            style={styles.taskButton}
+            onPress={() => handleComplete(task.id)}>
+            <PoppinsRegular style={styles.buttonText}>Complete</PoppinsRegular>
+          </Pressable>
+          <Pressable
+            android_ripple={{ color: "gray", borderless: false, foreground: true }}
+            style={styles.taskButton}
+            onPress={() => handleDelete(task.id)}>
+            <PoppinsRegular style={styles.buttonText}>Delete</PoppinsRegular>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
-const TaskTimeline: React.FC<TaskTimelineProps> = ({ tasks }) => {
+const TaskTimeline = ({ tasks: initialTasks, selectedDay }: TaskTimelineProps) => {
+  const [tasks, setTasks] = useState(initialTasks);
+
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
+
+  const handleRemoveTask = (taskId: string) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+
   if (tasks.length === 0) {
     return (
       <View style={styles.noTasksContainer}>
@@ -63,85 +125,89 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ tasks }) => {
       <FlashList
         data={tasks}
         renderItem={({ item, index }) => (
-          <TaskCard task={item} isLast={index === tasks.length - 1} index={index} />
+          <TaskCard task={item} index={index} onRemove={handleRemoveTask} />
         )}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         estimatedItemSize={140}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.flashList}
+        disableIntervalMomentum
       />
     </View>
   );
 };
+
+const enhance = withObservables(["selectedDay"], ({ selectedDay }) => ({
+  tasks: taskCollection.query(Q.sortBy("iso", Q.asc), Q.where("day", selectedDay)),
+}));
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 8,
     borderTopWidth: 1,
-    borderTopColor: 'gray',
+    borderTopColor: "gray",
+  },
+  taskButton: {
+    backgroundColor: "hsl(0, 0%, 8%)",
+    overflow: "hidden",
+    paddingHorizontal: 10,
+    paddingTop: 6,
+    paddingBottom: 5,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 12,
+    textAlign: "center",
   },
   taskContainer: {
-    flexDirection: 'row',
-    marginBottom: 20, // Space between task cards
-  },
-  timelineContainer: {
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  timelineDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'white',
-    zIndex: 1, // Ensure dot appears above the line
-  },
-  timelineLine: {
-    position: 'absolute',
-    top: 10, // Start line from the bottom of the dot
-    bottom: -20, // Extend line to connect with the next dot
-    left: 4, // Center the line (half of dot's width)
-    width: 2,
-    backgroundColor: 'white',
+    marginBottom: 20,
   },
   taskCard: {
-    flex: 1,
     padding: 15,
     borderRadius: 20,
-    marginRight: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  taskCardButtons: {
+    justifyContent: "space-evenly",
+    marginHorizontal: 3,
+  },
+  taskInfo: {
+    flex: 1,
+    paddingRight: 20,
   },
   taskTime: {
-    color: 'black',
+    color: "black",
     fontSize: 12,
     marginBottom: 5,
   },
   taskTitle: {
-    color: 'black',
+    color: "black",
     fontSize: 16,
     marginBottom: 5,
   },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  taskDesc: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginBottom: 5,
+    fontSize: 13,
   },
-  tag: {
-    color: 'black',
-    fontSize: 12,
-    marginRight: 5,
-  },
-  taskDuration: {
-    color: 'black',
-    fontSize: 12,
+  taskPriority: {
+    color: "black",
+    fontSize: 13,
   },
   noTasksContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "gray",
   },
   noTasksText: {
     fontSize: 22,
-    color: 'white',
+    color: "white",
   },
   flashList: {
     paddingTop: 15,
@@ -149,4 +215,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TaskTimeline;
+export default enhance(TaskTimeline);

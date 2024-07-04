@@ -1,20 +1,20 @@
-import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, View } from "react-native";
 
 export const BackIcon = (props: {
-  name: React.ComponentProps<typeof Ionicons>['name'];
+  name: React.ComponentProps<typeof Ionicons>["name"];
   color: string;
   pressed: boolean;
 }) => {
-  const backgroundColor = props.pressed ? 'hsl(0, 0%, 28%)' : 'hsl(0, 0%, 16%)';
+  const backgroundColor = props.pressed ? "hsl(0, 0%, 28%)" : "hsl(0, 0%, 16%)";
   return (
     <View
       style={{
         backgroundColor,
         width: 45,
         height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         borderRadius: 10,
         marginRight: 15,
         paddingBottom: 3,

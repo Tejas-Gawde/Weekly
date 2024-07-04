@@ -3,15 +3,17 @@ module.exports = function (api) {
   const plugins = [];
 
   plugins.push([
-    '@tamagui/babel-plugin',
+    "@tamagui/babel-plugin",
     {
-      components: ['tamagui'],
-      config: './tamagui.config.ts',
+      components: ["tamagui"],
+      config: "./tamagui.config.ts",
     },
   ]);
 
+  plugins.push(["@babel/plugin-proposal-decorators", { legacy: true }]);
+
   return {
-    presets: ['babel-preset-expo'],
+    presets: ["babel-preset-expo"],
 
     plugins,
   };

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, StyleProp, TextStyle } from 'react-native';
+import React from "react";
+import { Text, StyleProp, TextStyle } from "react-native";
 
 interface CustomTextProps {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface CustomTextProps {
 }
 
 const PoppinsRegular: React.FC<CustomTextProps> = ({ children, style }) => {
-  const defaultStyles = { fontFamily: 'Poppins_400Regular' };
+  const defaultStyles = { fontFamily: "Poppins_400Regular" };
   const combinedStyles = [defaultStyles, style];
   return <Text style={combinedStyles}>{children}</Text>;
 };

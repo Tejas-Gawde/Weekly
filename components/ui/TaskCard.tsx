@@ -1,42 +1,61 @@
-import { View } from 'react-native';
-import { Card } from 'tamagui';
+import { format } from "date-fns";
+import { View, StyleSheet } from "react-native";
+import { Card } from "tamagui";
 
-import Deadline from './Deadline';
-import Difficulty from './Difficulty';
-import PoppinsRegular from '../Text/PoppinsRegular';
-import PoppinsSemiBold from '../Text/PoppinsSemibold';
+import Deadline from "./Deadline";
+import Priority from "./Priority";
+import PoppinsRegular from "../Text/PoppinsRegular";
+import PoppinsSemiBold from "../Text/PoppinsSemibold";
 
-interface Task {
-  time: string;
-  title: string;
-  tags: string[];
-  duration: string;
-  color: string;
-}
+import Task from "~/models/Tasks";
 
 export default function TaskCard({ task }: { task: Task }) {
+  const formattedDate = format(new Date(task.iso), "MMM, dd hh:mm a");
   return (
-    <View style={{ alignItems: 'center' }}>
+    <View style={styles.container}>
       <Card
-        pressStyle={{ backgroundColor: 'hsl(0, 0%, 11%)' }}
+        pressStyle={styles.cardPressStyle}
         width="96%"
         height={140}
         backgroundColor="hsl(0, 0%, 11%)"
         borderRadius="$8"
         marginTop="$3">
-        <Card.Header flexDirection="row" justifyContent="space-between">
-          <PoppinsSemiBold style={{ color: 'white', fontSize: 16, width: '63%' }}>
-            I dont know put some Text here
-          </PoppinsSemiBold>
-          <Difficulty>Medium</Difficulty>
+        <Card.Header style={styles.cardHeader}>
+          <PoppinsSemiBold style={styles.taskTitle}>{task.title}</PoppinsSemiBold>
+          <Priority>{task.priority}</Priority>
         </Card.Header>
-        <Card.Footer flexDirection="row" justifyContent="space-between" padded>
-          <PoppinsRegular style={{ color: 'white', width: '63%', fontSize: 13 }}>
-            This should be the description
-          </PoppinsRegular>
-          <Deadline>Today</Deadline>
+        <Card.Footer style={styles.cardFooter} padded>
+          <PoppinsRegular style={styles.taskDescription}>{task.description}</PoppinsRegular>
+          <Deadline>{formattedDate}</Deadline>
         </Card.Footer>
       </Card>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+  },
+  cardPressStyle: {
+    backgroundColor: "hsl(0, 0%, 11%)",
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  taskTitle: {
+    color: "white",
+    fontSize: 18,
+    width: "63%",
+  },
+  cardFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  taskDescription: {
+    color: "white",
+    width: "63%",
+    fontSize: 16,
+  },
+});

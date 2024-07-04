@@ -1,8 +1,8 @@
-import { router } from 'expo-router';
-import { forwardRef } from 'react';
-import { Pressable } from 'react-native';
+import { router } from "expo-router";
+import { forwardRef } from "react";
+import { Pressable } from "react-native";
 
-import { BackIcon } from '../Icons/BackIcon';
+import { BackIcon } from "../Icons/BackIcon";
 
 export const HeaderBack = forwardRef<typeof Pressable, { onPress?: () => void }>(
   ({ onPress }, ref) => {

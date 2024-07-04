@@ -1,7 +1,7 @@
-import { forwardRef } from 'react';
-import { Pressable } from 'react-native';
+import { forwardRef } from "react";
+import { Pressable } from "react-native";
 
-import { MenuIcon } from '../Icons/MenuIcon';
+import { MenuIcon } from "../Icons/MenuIcon";
 
 export const HeaderButton = forwardRef<typeof Pressable, { onPress?: () => void }>(
   ({ onPress }, ref) => {

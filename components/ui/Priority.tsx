@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
 
-import PoppinsSemiBold from '../Text/PoppinsSemibold';
+import PoppinsSemiBold from "../Text/PoppinsSemibold";
 
-export default function Difficulty({ children }: { children: React.ReactNode }) {
+export default function Priority({ children }: { children: React.ReactNode }) {
   return (
     <View style={styles.container}>
       <PoppinsSemiBold style={styles.text}>{children}</PoppinsSemiBold>
@@ -12,9 +12,9 @@ export default function Difficulty({ children }: { children: React.ReactNode }) 
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'hsl(270, 93%, 83%)',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "hsl(270, 93%, 83%)",
     height: 30,
     borderRadius: 15,
     paddingHorizontal: 10,

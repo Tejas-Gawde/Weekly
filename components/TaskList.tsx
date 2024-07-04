@@ -1,58 +1,31 @@
-import { View } from 'react-native';
+import { Q } from "@nozbe/watermelondb";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { FlashList } from "@shopify/flash-list";
+import { StyleSheet, View } from "react-native";
 
-import PoppinsRegular from './Text/PoppinsRegular';
-import TaskCard from './ui/TaskCard';
-import { FlashList } from '@shopify/flash-list';
+import PoppinsRegular from "./Text/PoppinsRegular";
+import TaskCard from "./ui/TaskCard";
 
-export default function TaskList() {
-  const tasks = [
-    {
-      time: '11:00am',
-      title: 'Design team meeting',
-      tags: ['call', 'team'],
-      duration: '30 min',
-      color: '#333333',
-    },
-    {
-      time: '12:00am',
-      title: 'Restaurant C&B. New Project Research',
-      tags: ['ux design', 'brand', 'research'],
-      duration: '2 hr',
-      color: '#8E44AD',
-    },
-    {
-      time: '3:00pm',
-      title: 'Clients and managers meet. Fintech Company',
-      tags: ['call', 'finance', 'pm communication'],
-      duration: '1 hr',
-      color: '#F1C40F',
-    },
-    {
-      time: '3:00pm',
-      title: 'Clients and managers meet. Fintech Company',
-      tags: ['call', 'finance', 'pm communication'],
-      duration: '1 hr',
-      color: '#F1C40F',
-    },
-    {
-      time: '3:00pm',
-      title: 'Clients and managers meet. Fintech Company',
-      tags: ['call', 'finance', 'pm communication'],
-      duration: '1 hr',
-      color: '#F1C40F',
-    },
-    {
-      time: '3:00pm',
-      title: 'Clients and managers meet. Fintech Company',
-      tags: ['call', 'finance', 'pm communication'],
-      duration: '1 hr',
-      color: '#F1C40F',
-    },
-  ];
+import { taskCollection } from "~/database";
+import Task from "~/models/Tasks";
+
+function TaskList({ tasks }: { tasks: Task[] }) {
+  if (tasks.length === 0) {
+    return (
+      <>
+        <View style={styles.titleContainer}>
+          <PoppinsRegular style={styles.title}>Task list</PoppinsRegular>
+        </View>
+        <View style={styles.noTasksContainer}>
+          <PoppinsRegular style={styles.noTasksText}>No tasks to display!</PoppinsRegular>
+        </View>
+      </>
+    );
+  }
   return (
     <>
-      <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
-        <PoppinsRegular style={{ fontSize: 30, color: 'white' }}>Task list</PoppinsRegular>
+      <View style={styles.titleContainer}>
+        <PoppinsRegular style={styles.title}>Task list</PoppinsRegular>
       </View>
       <FlashList
         data={tasks}
@@ -64,3 +37,29 @@ export default function TaskList() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  titleContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  title: {
+    fontSize: 30,
+    color: "white",
+  },
+  noTasksContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noTasksText: {
+    fontSize: 22,
+    color: "white",
+  },
+});
+
+const enhance = withObservables([], () => ({
+  tasks: taskCollection.query(Q.sortBy("iso", Q.asc)), // shortcut syntax for `comment: comment.observe()`
+}));
+
+export default enhance(TaskList);
