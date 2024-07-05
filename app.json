@@ -53,6 +53,7 @@
       "supportsTablet": true
     },
     "android": {
+      "enableDangerousExperimentalLeanBuilds": true,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
