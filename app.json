@@ -20,6 +20,7 @@
         "expo-build-properties",
         {
           "android": {
+            "enableShrinkResourcesInReleaseBuilds": true,
             "enableProguardInReleaseBuilds": true,
             "kotlinVersion": "1.6.10",
             "packagingOptions": {
