@@ -3,11 +3,11 @@ import { Text, StyleProp, TextStyle } from "react-native";
 
 interface CustomTextProps {
   children: React.ReactNode;
-  style?: StyleProp<TextStyle>; // Optional additional styles
+  style?: StyleProp<TextStyle>;
 }
 
 const PoppinsSemiBold: React.FC<CustomTextProps> = ({ children, style }) => {
-  const defaultStyles = { fontFamily: "Poppins_600SemiBold" };
+  const defaultStyles = { fontFamily: "Poppins-SemiBold" };
   const combinedStyles = [defaultStyles, style];
   return <Text style={combinedStyles}>{children}</Text>;
 };

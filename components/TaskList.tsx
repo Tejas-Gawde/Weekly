@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 });
 
 const enhance = withObservables([], () => ({
-  tasks: taskCollection.query(Q.sortBy("iso", Q.asc)), // shortcut syntax for `comment: comment.observe()`
+  tasks: taskCollection.query(Q.sortBy("iso", Q.asc)),
 }));
 
 export default enhance(TaskList);

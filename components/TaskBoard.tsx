@@ -2,7 +2,7 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Observable } from "rxjs/internal/Observable";
-import { Button, Card } from "tamagui";
+import { Card } from "tamagui";
 
 import PoppinsRegular from "./Text/PoppinsRegular";
 import PoppinsSemiBold from "./Text/PoppinsSemibold";
@@ -17,22 +17,14 @@ const TaskBoard = ({
   taskStatistics: Statistics[];
   inProcess: number;
 }) => {
-  // Check if taskStatistics is defined and has at least one item
   const tasksTotal = taskStatistics?.[0]?.tasksTotal ?? 0;
   const tasksCompleted = taskStatistics?.[0]?.tasksCompleted ?? 0;
   const tasksMissed = taskStatistics?.[0]?.tasksMissed ?? 0;
 
   return (
     <>
-      <View style={styles.buttonContainer}>
-        <Button
-          borderRadius="$8"
-          width="25%"
-          height="$3"
-          disabled
-          backgroundColor="hsl(0, 0%, 16%)">
-          Tasks
-        </Button>
+      <View style={styles.titleContainer}>
+        <PoppinsRegular style={styles.title}>Tasks</PoppinsRegular>
       </View>
       <View style={styles.cardsContainer}>
         <View style={styles.cardRow}>
@@ -77,8 +69,18 @@ const TaskBoard = ({
 };
 
 const styles = StyleSheet.create({
-  buttonContainer: {
+  titleContainer: {
     paddingHorizontal: 24,
+  },
+  title: {
+    paddingTop: 2,
+    fontSize: 17,
+    borderRadius: 15,
+    color: "white",
+    backgroundColor: "hsl(0,0%,16%)",
+    width: 80,
+    textAlign: "center",
+    alignItems: "center",
   },
   cardsContainer: {
     paddingTop: 20,

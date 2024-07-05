@@ -112,7 +112,6 @@ export async function missedTasks() {
 
     return oldTasksCount;
   } catch (error) {
-    console.error("Error updating missed tasks:", error);
     throw error;
   }
 }
@@ -121,7 +120,7 @@ export const storeData = (key: string, value: string) => {
   try {
     storage.set(key, value);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -132,7 +131,7 @@ export const getItemsFor = (key: string) => {
       return value;
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -140,6 +139,6 @@ export const deleteItem = () => {
   try {
     storage.delete("HAS_LAUNCHED");
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };

@@ -67,7 +67,7 @@ export default function TaskInput({
           <ToggleGroup.Item value="Medium" padding={10} borderWidth={0.2}>
             <PoppinsRegular style={styles.priorityText}>Medium</PoppinsRegular>
           </ToggleGroup.Item>
-          <ToggleGroup.Item value="Hign" padding={10} borderWidth={0.2}>
+          <ToggleGroup.Item value="High" padding={10} borderWidth={0.2}>
             <PoppinsRegular style={styles.priorityText}>High</PoppinsRegular>
           </ToggleGroup.Item>
         </ToggleGroup>

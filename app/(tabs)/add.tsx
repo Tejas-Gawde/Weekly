@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ScrollView, StyleSheet, View, Pressable } from "react-native";
 
 import TaskInput from "~/components/TaskInput";
@@ -17,9 +17,6 @@ export default function Add() {
     minutes: "",
     amPm: "PM",
   });
-  useEffect(() => {
-    console.log(selectedTime);
-  }, [selectedTime]);
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [inputName, setInputName] = useState("");
   const [inputDescription, setInputDescription] = useState("");

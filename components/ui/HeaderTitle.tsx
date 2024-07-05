@@ -9,7 +9,7 @@ const HeaderTitleComponent = ({ userDetail }: { userDetail: UserDetail[] }) => {
   return <Text style={styles.headerTitle}>{nickname}</Text>;
 };
 const enhance = withObservables([], () => ({
-  userDetail: userDetailCollection.query().observeWithColumns(["nickname"]), // Assumes only one user detail is present
+  userDetail: userDetailCollection.query().observeWithColumns(["nickname"]),
 }));
 
 const EnhancedHeaderTitle = enhance(HeaderTitleComponent);
@@ -17,7 +17,7 @@ const EnhancedHeaderTitle = enhance(HeaderTitleComponent);
 const styles = {
   headerTitle: {
     color: "white",
-    fontFamily: "Poppins_400Regular",
+    fontFamily: "Poppins-Regular",
     paddingLeft: 10,
     fontSize: 20,
   },

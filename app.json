@@ -3,7 +3,7 @@
     "name": "Weekly",
     "slug": "Weekly",
     "version": "1.0.1",
-    "scheme": ["com.weekly.Weekly"],
+    "scheme": ["com.weekly.weekly"],
     "web": {
       "bundler": "metro",
       "output": "static"
@@ -26,6 +26,12 @@
               "pickFirst": ["**/libc++_shared.so"]
             }
           }
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/Poppins-Regular.ttf", "./assets/fonts/Poppins-SemiBold.ttf"]
         }
       ]
     ],

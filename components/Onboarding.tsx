@@ -51,8 +51,6 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
       });
       setProgress(100);
     } else {
-      // Here you would typically save the inputValue to your database
-      console.log("Saving to database:", inputValue);
       setName(inputValue).then(() => {
         setInputValue("");
         storeData(HAS_LAUNCHED, "true");
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   section: {
-    width: width - 40, // Subtracting container padding
+    width: width - 40,
     justifyContent: "center",
   },
   header1: {
