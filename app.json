@@ -2,8 +2,8 @@
   "expo": {
     "name": "Weekly",
     "slug": "Weekly",
-    "version": "1.0.0",
-    "scheme": "com.weekly.Weekly",
+    "version": "1.0.1",
+    "scheme": ["com.weekly.Weekly"],
     "web": {
       "bundler": "metro",
       "output": "static"
@@ -20,6 +20,7 @@
         "expo-build-properties",
         {
           "android": {
+            "enableProguardInReleaseBuilds": true,
             "kotlinVersion": "1.6.10",
             "packagingOptions": {
               "pickFirst": ["**/libc++_shared.so"]

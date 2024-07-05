@@ -7,7 +7,7 @@ import PoppinsRegular from "~/components/Text/PoppinsRegular";
 import TimePicker from "~/components/TimePicker";
 import UploadPopup from "~/components/UploadPopup";
 import WeekBoard from "~/components/WeekBoard";
-import { UploadTask, convertToISOFromSelected, deleteItem } from "~/functions/helper";
+import { UploadTask, convertToISOFromSelected } from "~/functions/helper";
 
 const currentDate = dayjs().format("ddd DD");
 

@@ -61,7 +61,7 @@ function AnimatedPressable({
   const handlePressIn = () => {
     if (!disabled) {
       Animated.spring(scaleValue, {
-        toValue: 0.7,
+        toValue: 0.6,
         useNativeDriver: true,
       }).start();
     }

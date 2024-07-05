@@ -25,9 +25,7 @@ export default function TabLayout() {
   missedTasks();
   return (
     <>
-      {!hasLaunched ? (
-        <Onboarding onComplete={() => setHasLaunched(true)} />
-      ) : (
+      {hasLaunched ? (
         <Tabs
           sceneContainerStyle={{ backgroundColor: "hsl(0, 0%, 6%)" }}
           screenOptions={{
@@ -96,6 +94,8 @@ export default function TabLayout() {
             }}
           />
         </Tabs>
+      ) : (
+        <Onboarding onComplete={() => setHasLaunched(true)} />
       )}
     </>
   );
