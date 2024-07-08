@@ -1,7 +1,8 @@
 import { View, StyleSheet } from "react-native";
-import { Input, TextArea, Theme, ToggleGroup } from "tamagui";
 
 import PoppinsRegular from "./Text/PoppinsRegular";
+import Input from "./ui/Input";
+import ToggleGroup from "./ui/ToggleGroup"; // Import the new ToggleGroup component
 
 interface TaskInputProps {
   setInputDescription: React.Dispatch<React.SetStateAction<string>>;
@@ -20,75 +21,56 @@ export default function TaskInput({
   inputDescription,
   taskPriority,
 }: TaskInputProps) {
+  const priorities = ["Low", "Medium", "High"];
+
   return (
     <View style={styles.container}>
       <PoppinsRegular style={styles.text}>Title</PoppinsRegular>
       <Input
         value={inputName}
         maxLength={25}
-        size="$4"
-        borderWidth={0}
-        width="90%"
-        marginVertical={10}
-        borderColor="white"
         placeholder="Max. 25 characters"
-        onChangeText={(text) => {
-          setInputName(text);
-        }}
+        onChangeText={setInputName}
       />
       <PoppinsRegular style={styles.text}>Description</PoppinsRegular>
-      <TextArea
+      <Input
         value={inputDescription}
-        maxLength={45}
+        maxLength={65}
+        multiline
+        numberOfLines={4}
         textAlignVertical="top"
-        size="$4"
-        borderWidth={0}
-        width="90%"
-        marginVertical={15}
-        borderColor="white"
-        placeholder="Max. 45 characters"
-        onChangeText={(text) => setInputDescription(text)}
+        style={styles.textArea}
+        placeholder="Max. 65 characters"
+        onChangeText={setInputDescription}
       />
-      <PoppinsRegular style={styles.text}> Priority</PoppinsRegular>
-      <Theme name="light">
-        <ToggleGroup
-          value={taskPriority}
-          disableDeactivation
-          onValueChange={(value) => {
-            setTaskPriority(value);
-          }}
-          marginVertical={10}
-          type="single"
-          size="$10"
-          defaultValue="Low">
-          <ToggleGroup.Item value="Low" padding={10} borderWidth={0.2}>
-            <PoppinsRegular style={styles.priorityText}>Low</PoppinsRegular>
-          </ToggleGroup.Item>
-          <ToggleGroup.Item value="Medium" padding={10} borderWidth={0.2}>
-            <PoppinsRegular style={styles.priorityText}>Medium</PoppinsRegular>
-          </ToggleGroup.Item>
-          <ToggleGroup.Item value="High" padding={10} borderWidth={0.2}>
-            <PoppinsRegular style={styles.priorityText}>High</PoppinsRegular>
-          </ToggleGroup.Item>
-        </ToggleGroup>
-      </Theme>
+      <PoppinsRegular style={styles.text}>Priority</PoppinsRegular>
+      <ToggleGroup
+        options={priorities}
+        value={taskPriority}
+        onChange={setTaskPriority}
+        containerStyle={styles.toggleGroup}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingVertical: 10,
     alignItems: "center",
+    gap: 10,
   },
   text: {
     color: "white",
     textAlign: "center",
     fontSize: 20,
   },
-  priorityText: {
-    color: "black",
-    textAlign: "center",
-    fontSize: 16,
+  textArea: {
+    height: 100,
+  },
+  toggleGroup: {
+    width: "100%",
+    maxWidth: 300, // Adjust as needed
   },
 });

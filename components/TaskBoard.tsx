@@ -1,14 +1,29 @@
 import { withObservables } from "@nozbe/watermelondb/react";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ViewProps, ViewStyle } from "react-native";
 import { Observable } from "rxjs/internal/Observable";
-import { Card } from "tamagui";
 
 import PoppinsRegular from "./Text/PoppinsRegular";
 import PoppinsSemiBold from "./Text/PoppinsSemibold";
 
 import { taskCollection, statisticsCollection } from "~/database";
 import Statistics from "~/models/Statistics";
+
+interface CardProps extends ViewProps {
+  title: string;
+  value: number;
+}
+
+const Card: React.FC<CardProps> = ({ style, title, value }) => (
+  <View style={[styles.card, style]}>
+    <View style={styles.cardHeader}>
+      <PoppinsRegular>{title}</PoppinsRegular>
+    </View>
+    <View style={styles.cardFooter}>
+      <PoppinsSemiBold style={styles.cardNumber}>{value}</PoppinsSemiBold>
+    </View>
+  </View>
+);
 
 const TaskBoard = ({
   taskStatistics,
@@ -28,40 +43,28 @@ const TaskBoard = ({
       </View>
       <View style={styles.cardsContainer}>
         <View style={styles.cardRow}>
-          <Card width="48.5%" height={110} borderRadius="$8" backgroundColor="hsl(163, 76%, 44%)">
-            <Card.Header padding="$3" paddingHorizontal="$4">
-              <PoppinsRegular>All tasks</PoppinsRegular>
-            </Card.Header>
-            <Card.Footer paddingHorizontal="$3.5">
-              <PoppinsSemiBold style={styles.cardNumber}>{tasksTotal}</PoppinsSemiBold>
-            </Card.Footer>
-          </Card>
-          <Card width="48.5%" height={110} borderRadius="$8" backgroundColor="hsl(0, 0%, 100%)">
-            <Card.Header padding="$3" paddingHorizontal="$4">
-              <PoppinsRegular>In Process</PoppinsRegular>
-            </Card.Header>
-            <Card.Footer paddingHorizontal="$3.5">
-              <PoppinsSemiBold style={styles.cardNumber}>{inProcess}</PoppinsSemiBold>
-            </Card.Footer>
-          </Card>
+          <Card
+            style={{ width: "48.5%", height: 110, backgroundColor: "hsl(163, 76%, 44%)" }}
+            title="All tasks"
+            value={tasksTotal}
+          />
+          <Card
+            style={{ width: "48.5%", height: 110, backgroundColor: "hsl(0, 0%, 100%)" }}
+            title="In Process"
+            value={inProcess}
+          />
         </View>
         <View style={styles.cardRow}>
-          <Card width="48.5%" height={110} borderRadius="$8" backgroundColor="hsl(0, 0%, 100%)">
-            <Card.Header padding="$3" paddingHorizontal="$4">
-              <PoppinsRegular>Completed</PoppinsRegular>
-            </Card.Header>
-            <Card.Footer paddingHorizontal="$3.5">
-              <PoppinsSemiBold style={styles.cardNumber}>{tasksCompleted}</PoppinsSemiBold>
-            </Card.Footer>
-          </Card>
-          <Card width="48.5%" height={110} borderRadius="$8" backgroundColor="hsl(1, 70%, 56%)">
-            <Card.Header padding="$3" paddingHorizontal="$4">
-              <PoppinsRegular>Missed</PoppinsRegular>
-            </Card.Header>
-            <Card.Footer paddingHorizontal="$3.5">
-              <PoppinsSemiBold style={styles.cardNumber}>{tasksMissed}</PoppinsSemiBold>
-            </Card.Footer>
-          </Card>
+          <Card
+            style={{ width: "48.5%", height: 110, backgroundColor: "hsl(0, 0%, 100%)" }}
+            title="Completed"
+            value={tasksCompleted}
+          />
+          <Card
+            style={{ width: "48.5%", height: 110, backgroundColor: "hsl(1, 70%, 56%)" }}
+            title="Missed"
+            value={tasksMissed}
+          />
         </View>
       </View>
     </>
@@ -90,6 +93,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingBottom: 10,
+  },
+  card: {
+    borderRadius: 15,
+    padding: 12,
+    justifyContent: "space-between",
+  } as ViewStyle,
+  cardHeader: {
+    paddingBottom: 8,
+  },
+  cardFooter: {
+    paddingTop: 8,
   },
   cardNumber: {
     fontSize: 34,

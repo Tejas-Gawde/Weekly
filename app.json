@@ -2,8 +2,9 @@
   "expo": {
     "name": "Weekly",
     "slug": "Weekly",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scheme": ["com.weekly.weekly"],
+    "jsEngine": "hermes",
     "web": {
       "bundler": "metro",
       "output": "static"
@@ -53,7 +54,6 @@
       "supportsTablet": true
     },
     "android": {
-      "enableDangerousExperimentalLeanBuilds": true,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

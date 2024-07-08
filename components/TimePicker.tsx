@@ -1,8 +1,8 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
-import { Input } from "tamagui";
+import { Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
+import { View, StyleSheet, Pressable, TextInput } from "react-native";
 
 import PoppinsRegular from "./Text/PoppinsRegular";
+import Input from "./ui/Input";
 
 interface TimePickerProps {
   setSelectedTime: Dispatch<SetStateAction<{ hours: string; minutes: string; amPm: string }>>;
@@ -19,6 +19,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
 }) => {
   const [hourInput, setHourInput] = useState("");
   const [minuteInput, setMinuteInput] = useState("");
+  const minRef = useRef<TextInput>(null);
 
   useEffect(() => {
     validateTime();
@@ -102,22 +103,19 @@ const TimePicker: React.FC<TimePickerProps> = ({
     <View style={styles.container}>
       <View style={styles.timePicker}>
         <Input
+          returnKeyType="next"
           value={hourInput}
           maxLength={2}
           keyboardType="numeric"
-          flex={1}
-          size={1}
-          borderWidth={0}
           placeholder="12"
           onChangeText={handleHourChange}
+          onSubmitEditing={() => minRef.current?.focus()}
         />
         <Input
+          ref={minRef}
           value={minuteInput}
           maxLength={2}
           keyboardType="numeric"
-          flex={1}
-          size={1}
-          borderWidth={0}
           placeholder="00"
           onChangeText={handleMinuteChange}
         />

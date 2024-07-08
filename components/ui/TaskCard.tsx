@@ -1,6 +1,5 @@
 import { format } from "date-fns";
-import { View, StyleSheet } from "react-native";
-import { Card } from "tamagui";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 
 import Deadline from "./Deadline";
 import Priority from "./Priority";
@@ -11,24 +10,19 @@ import Task from "~/models/Tasks";
 
 export default function TaskCard({ task }: { task: Task }) {
   const formattedDate = format(new Date(task.iso), "MMM, dd hh:mm a");
+
   return (
     <View style={styles.container}>
-      <Card
-        pressStyle={styles.cardPressStyle}
-        width="96%"
-        height={140}
-        backgroundColor="hsl(0, 0%, 11%)"
-        borderRadius="$8"
-        marginTop="$3">
-        <Card.Header style={styles.cardHeader}>
+      <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+        <View style={styles.cardHeader}>
           <PoppinsSemiBold style={styles.taskTitle}>{task.title}</PoppinsSemiBold>
           <Priority>{task.priority}</Priority>
-        </Card.Header>
-        <Card.Footer style={styles.cardFooter} padded>
+        </View>
+        <View style={styles.cardFooter}>
           <PoppinsRegular style={styles.taskDescription}>{task.description}</PoppinsRegular>
           <Deadline>{formattedDate}</Deadline>
-        </Card.Footer>
-      </Card>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -37,8 +31,15 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
   },
-  cardPressStyle: {
+  card: {
+    width: "96%",
+
     backgroundColor: "hsl(0, 0%, 11%)",
+    gap: 15,
+    borderRadius: 15,
+    marginTop: 12,
+    padding: 16,
+    justifyContent: "space-between",
   },
   cardHeader: {
     flexDirection: "row",

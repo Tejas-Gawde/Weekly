@@ -10,10 +10,10 @@ import {
   SafeAreaView,
   Pressable,
 } from "react-native";
-import { Progress } from "tamagui";
 
 import PoppinsRegular from "./Text/PoppinsRegular";
 import PoppinsSemiBold from "./Text/PoppinsSemibold";
+import BouncyProgressBar from "./ui/Progress";
 
 import { setName, storeData } from "~/functions/helper";
 
@@ -62,9 +62,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <Progress value={progress}>
-        <Progress.Indicator backgroundColor="white" animation="bouncy" />
-      </Progress>
+      <BouncyProgressBar value={progress} backgroundColor="white" />
       <Animated.View
         style={[
           styles.content,
