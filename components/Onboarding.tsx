@@ -62,7 +62,7 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <BouncyProgressBar value={progress} backgroundColor="white" />
+      <BouncyProgressBar value={progress} />
       <Animated.View
         style={[
           styles.content,

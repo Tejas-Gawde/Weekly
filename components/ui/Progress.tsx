@@ -4,12 +4,10 @@ import { View, Animated, StyleSheet } from "react-native";
 const BouncyProgressBar = ({
   value,
   height = 10,
-  backgroundColor,
   fillColor = "white",
 }: {
   value: number;
   height?: number;
-  backgroundColor?: string;
   fillColor?: string;
 }) => {
   const animatedWidth = useRef(new Animated.Value(0)).current;
@@ -28,7 +26,7 @@ const BouncyProgressBar = ({
   }, [value]);
 
   return (
-    <View style={[styles.container, { height, backgroundColor }]}>
+    <View style={[styles.container, { height }]}>
       <Animated.View
         style={[
           styles.fill,
@@ -50,6 +48,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     overflow: "hidden",
+    backgroundColor: "transparent",
   },
   fill: {
     height: "100%",
