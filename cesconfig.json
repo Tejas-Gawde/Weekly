@@ -1,6 +1,6 @@
 {
   "cesVersion": "2.10.5",
-  "projectName": "planit",
+  "projectName": "weekly",
   "packages": [
     {
       "name": "expo-router",
@@ -8,10 +8,6 @@
       "options": {
         "type": "tabs"
       }
-    },
-    {
-      "name": "tamagui",
-      "type": "styling"
     }
   ],
   "flags": {
