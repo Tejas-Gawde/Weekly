@@ -5,7 +5,7 @@ const BouncyProgressBar = ({
   value,
   height = 10,
   backgroundColor,
-  fillColor = "#4CAF50",
+  fillColor = "white",
 }: {
   value: number;
   height?: number;
